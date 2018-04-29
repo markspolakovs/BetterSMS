@@ -1,0 +1,19 @@
+{
+    "manifest_version": 2,
+    "name": "BetterSMS",
+    "version": "0",
+    "description": "Improves SMS's interface",
+    "content_scripts": [
+        {
+            "run_at": "document_start",
+            "matches": ["*://sms.eursc.eu/*"],
+            "js": [
+                "browser-polyfill.min.js",
+                "content.js"
+            ]
+        }
+    ],
+    "permissions": [
+        "*://sms.eursc.eu/*"
+    ]
+}
