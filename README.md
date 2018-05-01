@@ -24,3 +24,12 @@ For now the extension is not available on Chrome Web Store / AMO, so the only wa
 7. *(Chrome)* Click "Load Unpacked" and browse to `where you downloaded this extension`/dist
 8. *(Firefox)* Enter `about:debugging` in the address bar
 9. *(Firefox)* Click "Load Temporary Add-on"  and browse to `where you downloaded this extension`/dist
+
+### Features / To-Do List
+
+- [x] O365 login button on login page
+- [ ] Show all announcements on dashboard, including expired
+- [ ] Clickable assignments in "Graded Exercises"
+- [ ] Search for assignments
+- [ ] Search for files
+- [ ] Notifications
