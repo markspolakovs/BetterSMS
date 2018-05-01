@@ -28,7 +28,7 @@ For now the extension is not available on Chrome Web Store / AMO, so the only wa
 ### Features / To-Do List
 
 - [x] O365 login button on login page
-- [ ] Show all announcements on dashboard, including expired
+- [x] Show all announcements on dashboard, including expired
 - [ ] Clickable assignments in "Graded Exercises"
 - [ ] Search for assignments
 - [ ] Search for files

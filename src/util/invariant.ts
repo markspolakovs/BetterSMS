@@ -132,7 +132,7 @@ export function isNull(x: any, msg?: string): x is null {
  *
  * @param msg The message to print if the check fails
  */
-export function isNonNull<T>(x: T | null, msg?: string) {
+export function isNonNull<T>(x: T | null, msg?: string): x is NonNullable<T> {
   invariant(x !== null, msg || "Failed non-null check");
   return true;
 }
