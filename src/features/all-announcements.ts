@@ -1,7 +1,6 @@
 import $ from "jquery";
 import { Feature } from "../util/Feature";
 import { invariant, isNonNull } from "../util/invariant";
-import { MsmDashboardWindow } from "../util/msm-types";
 
 ($.fn as any).bindFirst = function(name: string, fn: Function) {
   // bind as you normally would

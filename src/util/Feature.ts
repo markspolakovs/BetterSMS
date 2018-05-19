@@ -8,6 +8,8 @@ export interface Feature {
     init?: () => void;
     apply: () => void;
     unload?: () => void;
+    /** If an active glob matches both before and after navigation, unload and reapply it anyway */
+    reloadOnSamePage?: boolean;
 }
 
 const features: Array<[UrlGlob[], Feature]> = [];
@@ -45,6 +47,12 @@ function activateFeatures(url?: string) {
                 feature.apply();
                 loadedFeatures.push(feature.name);
                 log("🔰", feature.name);
+            } else if (feature.reloadOnSamePage) {
+                if (feature.unload) {
+                    feature.unload();
+                }
+                feature.apply();
+                log("💱", feature.name);
             }
         } else {
             if (loadedFeatures.indexOf(feature.name) !== -1) {
