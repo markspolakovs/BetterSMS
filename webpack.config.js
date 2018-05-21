@@ -7,7 +7,8 @@ const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 module.exports = () => ({
   devtool: "srcmap",
   entry: {
-    content: "./src/content.ts"
+    content: "./src/content.ts",
+    background: "./src/background.ts"
   },
   output: {
     path: path.join(__dirname, "dist"),

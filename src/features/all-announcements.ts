@@ -22,20 +22,17 @@ const feature: Feature = {
   name: "all-announcements",
   activePaths: ["https://sms.eursc.eu/content/common/dashboard.php"],
   apply: () => {
-    const mainFrame = $("#interface_frame");
-    mainFrame
-      .contents()
-      .find("#dashlet_1")
+    if ($("#interface_frame").length > 0) {
+      // we're not in the iframe, let the content script in the frame handle it
+      return;
+    }
+    $("#dashlet_1")
       .replaceWith(
         `<iframe id="allAnnouncements-iframe" style="width: 100%; height: 400px" src="https://sms.eursc.eu/content/announcement/announcement_inbox.php"></iframe>`
       );
     const oldWindow = window;
     window.setTimeout(() => {
-      const contentDocument = (mainFrame[0] as HTMLIFrameElement).contentDocument;
-      if (!isNonNull(contentDocument, "iFrame's contentDocument is null")) {
-        return;
-      }
-      const replacement = contentDocument.getElementById(
+      const replacement = document.getElementById(
         "allAnnouncements-iframe"
       ) as HTMLIFrameElement;
       invariant(replacement !== null, "Newly created iFrame is null");

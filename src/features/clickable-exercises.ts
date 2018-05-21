@@ -82,18 +82,19 @@ const feature: Feature = {
   activePaths: ["https://sms.eursc.eu/content/studentui/grades_details.php*"],
   reloadOnSamePage: true,
   async apply() {
+    if ($("#interface_frame").length > 0) {
+      console.log("bailing");
+      // we're not in the iframe, let the content script in the frame handle it
+      return;
+    }
     // Abort if there are no exercises
     if (
-      ($("#interface_frame")
-        .contents()
-        .find("table.tablesorter td")[0] as HTMLElement).innerText ===
+      ($("table.tablesorter td")[0] as HTMLElement).innerText ===
       "No exercises recorded on system"
     ) {
       return;
     }
-    $("#interface_frame")
-      .contents()
-      .find("table.tablesorter tbody tr")
+    $("table.tablesorter tbody tr")
       .each(function() {
         const date = $(this)
           .find("td:eq(0)")
