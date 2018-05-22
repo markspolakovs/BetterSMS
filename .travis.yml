@@ -8,7 +8,7 @@ script:
 - yarn run build
 after_success: 
   - openssl aes-256-cbc -k "$FILE_DECRYPTION_KEY" -in packaging-key.pem.enc -out packaging-key.pem -d
-  - chrome --no-sandbox --pack-extension=dist --pack-extension-key=packaging-key.pem
+  - google-chrome-stable --no-sandbox --pack-extension=dist --pack-extension-key=packaging-key.pem
   - mv dist.crx better-sms-$TRAVIS_COMMIT.crx
 deploy:
   provider: releases
