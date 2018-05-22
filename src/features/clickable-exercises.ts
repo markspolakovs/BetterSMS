@@ -5,6 +5,7 @@ import lodash from "lodash";
 import { ScheduleEntry } from "../util/msm-types";
 import { invariant, isNonNull } from "../util/invariant";
 import { Feature } from "../util/Feature";
+import { insertTemporaryScript } from "../util/scripts";
 
 let userId: string;
 
@@ -71,8 +72,8 @@ async function getExerciseDetail(
     // DIRTY HAX - you can't access page variables from an extension content script
     // so we inject a script tag, which can
     // I hate the universe, but it works
-    $(document.body).append(
-      `<script>window.loadStudentExercise("${exer.id}", "${userId}")</script>`
+    insertTemporaryScript(
+      `window.loadStudentExercise("${exer.id}", "${userId}")`
     );
   }
 }
@@ -94,30 +95,29 @@ const feature: Feature = {
     ) {
       return;
     }
-    $("table.tablesorter tbody tr")
-      .each(function() {
-        const date = $(this)
-          .find("td:eq(0)")
-          .text();
-        const type = $(this)
-          .find("td:eq(1)")
-          .text();
-        // Description merits special handling - it can contain a comment
-        let description: string;
-        const descParent = $(this).find("td:eq(2)");
-        if (descParent.children("div").length === 0) {
-          // no comment div - throw it in there
-          description = descParent.text();
-        } else {
-          description = descParent.contents()[0].textContent!;
-        }
-        $(this)
-          .find("td:lt(3)")
-          .css({ cursor: "pointer" })
-          .click(async function() {
-            await getExerciseDetail(date, type, description);
-          });
-      });
+    $("table.tablesorter tbody tr").each(function() {
+      const date = $(this)
+        .find("td:eq(0)")
+        .text();
+      const type = $(this)
+        .find("td:eq(1)")
+        .text();
+      // Description merits special handling - it can contain a comment
+      let description: string;
+      const descParent = $(this).find("td:eq(2)");
+      if (descParent.children("div").length === 0) {
+        // no comment div - throw it in there
+        description = descParent.text();
+      } else {
+        description = descParent.contents()[0].textContent!;
+      }
+      $(this)
+        .find("td:lt(3)")
+        .css({ cursor: "pointer" })
+        .click(async function() {
+          await getExerciseDetail(date, type, description);
+        });
+    });
   }
 };
 

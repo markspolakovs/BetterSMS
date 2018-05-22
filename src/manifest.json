@@ -15,7 +15,7 @@
     "scripts": ["browser-polyfill.min.js", "background.js"],
     "persistent": false
   },
-  "permissions": ["*://sms.eursc.eu/*", "notifications"],
+  "permissions": ["*://sms.eursc.eu/*", "notifications", "alarms"],
   "externally_connectable": {
     "matches": ["*://sms.eursc.eu/*"]
   }

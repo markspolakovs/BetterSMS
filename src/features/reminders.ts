@@ -28,7 +28,7 @@ function onDomMutation(
               key = insertTemporaryScript(`var __dialogEl = $("#assignment_container");
               var __buttons = __dialogEl.dialog("option", "buttons");
               __dialogEl.dialog("option", "buttons", {
-                notifications: () => {window.postMessage({feature:"notifications",action:"clickNotifications",payload:{}}, "*")},
+                reminders: () => {window.postMessage({feature:"reminders",action:"clickReminders",payload:{}}, "*")},
                 ...__buttons
               });`);
             }
@@ -40,7 +40,7 @@ function onDomMutation(
 }
 
 const feature: BackgroundFeature = {
-  name: "notifications",
+  name: "reminders",
   activePaths: ["https://sms.eursc.eu**", "https://sms.eursc.eu/**"],
   async apply() {
     observer = new MutationObserver(onDomMutation);
@@ -58,13 +58,6 @@ const feature: BackgroundFeature = {
   onPageMessage(action, message) {},
   onBackgroundMessage(action, message) {
     switch (action) {
-      case "test":
-        browser.notifications.create(null, {
-          type: "basic",
-          title: "BetterSMS content messaging working!",
-          message: "Foo message sent from content script: " + message.foo,
-          iconUrl: testIcon
-        });
     }
   }
 };

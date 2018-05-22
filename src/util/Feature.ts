@@ -257,6 +257,5 @@ if (isBackground()) {
 } else {
   document.addEventListener("DOMContentLoaded", () => {
     activateFeatures();
-    console.log("activating features on " + window.location);
   });
 }
