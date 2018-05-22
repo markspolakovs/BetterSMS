@@ -7,7 +7,7 @@ cache: yarn
 script:
 - yarn run build
 after_success: 
-  - set -u
+  - set -e
   - openssl aes-256-cbc -k "${FILE_DECRYPTION_KEY}" -in packaging-key.pem.enc -out packaging-key.pem -d
   - google-chrome-stable --no-sandbox --pack-extension=dist --pack-extension-key=packaging-key.pem
   - mv dist.crx better-sms-${TRAVIS_COMMIT}.crx
