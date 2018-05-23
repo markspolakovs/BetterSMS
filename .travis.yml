@@ -12,8 +12,7 @@ after_success:
 - openssl aes-256-cbc -K $encrypted_0373efeb2806_key -iv $encrypted_0373efeb2806_iv -in packaging-key.pem.enc -out packaging-key.pem -d
 - wget https://github.com/mcuadros/go-crxmake/releases/download/v0.2.0/crxmake_v0.2.0_linux_amd64.tar.gz
 - tar -xvzf crxmake_v0.2.0_linux_amd64.tar.gz
-- cp crxmake_v0.2.0_linux_amd64/crxmake /usr/local/bin/
-- crxmake --key-file=packaging-key.pem dist better-sms-${TRAVIS_COMMIT}.crx
+- crxmake_v0.2.0_linux_amd64/crxmake --key-file=packaging-key.pem dist better-sms-${TRAVIS_COMMIT}.crx
 deploy:
   provider: releases
   api_key:
