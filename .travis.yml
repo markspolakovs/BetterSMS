@@ -1,5 +1,5 @@
 language: node_js
-sudo: required
+sudo: false
 addons:
   chrome: stable
 node_js:
@@ -10,8 +10,10 @@ script:
 after_success:
 - set -e
 - openssl aes-256-cbc -K $encrypted_0373efeb2806_key -iv $encrypted_0373efeb2806_iv -in packaging-key.pem.enc -out packaging-key.pem -d
-- google-chrome-stable --pack-extension=dist --pack-extension-key=packaging-key.pem
-- mv dist.crx better-sms-${TRAVIS_COMMIT}.crx
+- wget https://github.com/mcuadros/go-crxmake/releases/download/v0.2.0/crxmake_v0.2.0_linux_amd64.tar.gz
+- tar -xvzf crxmake_v0.2.0_linux_amd64.tar.gz
+- cp crxmake_v0.2.0_linux_amd64/crxmake /usr/local/bin/
+- crxmake --key-file=packaging-key.pem dist better-sms-${TRAVIS_COMMIT}.crx
 deploy:
   provider: releases
   api_key:
