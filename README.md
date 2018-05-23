@@ -13,23 +13,15 @@ Since some people might be getting concerned:
 
 ### Installing
 
-For now the extension is not available on Chrome Web Store / AMO, so the only way is to install a development build:
+For now the extension is not available on Chrome Web Store / AMO, so the only way is to install a development build. For now development builds are only available for Chrome, Firefox builds are coming soon.
 
-1. Either `git clone https://github.com/markspolakovs/BetterSMS` or click "Download ZIP"
-2. Install Node.JS and yarn
-3. `yarn`
-4. `yarn run build`
-5. *(Chrome)* Click on the three dots in the top-right > More Tools > Extensions (or type `chrome://extensions` in the search bar)
-6. *(Chrome)* Tick "Developer Mode" in the top-right
-7. *(Chrome)* Click "Load Unpacked" and browse to `where you downloaded this extension`/dist
-8. *(Firefox)* Enter `about:debugging` in the address bar
-9. *(Firefox)* Click "Load Temporary Add-on"  and browse to `where you downloaded this extension`/dist
+To download a development build, visit https://github.com/markspolakovs/BetterSMS/releases, find the latest release, download the `.crx` file, go to `chrome://extensions`, and drag-and-drop the `.crx` file onto the Chrome page.
 
 ### Features / To-Do List
 
 - [x] O365 login button on login page
 - [x] Show all announcements on dashboard, including expired
-- [ ] Clickable assignments in "Graded Exercises"
+- [x] Clickable assignments in "Graded Exercises"
 - [ ] Search for assignments
 - [ ] Search for files
 - [ ] Notifications
