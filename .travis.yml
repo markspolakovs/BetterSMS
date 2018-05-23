@@ -1,4 +1,5 @@
 language: node_js
+sudo: false
 addons:
   chrome: stable
 node_js:
@@ -8,9 +9,8 @@ script:
 - yarn run build
 after_success:
 - set -e
-- openssl aes-256-cbc -k "${FILE_DECRYPTION_KEY}" -in packaging-key.pem.enc -out packaging-key.pem
-  -d
-- google-chrome-stable --no-sandbox --pack-extension=dist --pack-extension-key=packaging-key.pem
+- openssl aes-256-cbc -K $encrypted_cbefc3e1ec6b_key -iv $encrypted_cbefc3e1ec6b_iv -in packaging-key.pem.enc -out packaging-key.pem -d
+- google-chrome-stable --pack-extension=dist --pack-extension-key=packaging-key.pem
 - mv dist.crx better-sms-${TRAVIS_COMMIT}.crx
 deploy:
   provider: releases
@@ -19,7 +19,3 @@ deploy:
   file: better-sms-${TRAVIS_COMMIT}.crx
   skip_cleanup: true
   prerelease: true
-env:
-  global:
-  - secure: ltJcsme0lQhCdbxYokvGKM0rCYYsRD/IhtOJkmdny+/JBcuIDemdC2pumUIid9bOUCkM42SS0MUCHKohDIw1O5jqjrT3AwhiFBmRcjmix6z3qvwAGEx1HgPqB2Hai4uKrw3PwME/7U6Vs/rC74whozdkmFcag/RThCFNSCeTAiSbA0Orpa7IAZdbkUpNJawRdh52YtZcRj8yLGp8e48zPtyBr9MxKUBIrVojGWsus6gPqWXtVH8Y2wUDUSEUFfZy6yecUOIyX7BHt7a3GGYGcmzTF3cuHV5Jhkwa1uo5NIwUPQ3rTwQ/yZm5gG8jh4Vucn8ykbu49CNliJNQctJB+1Ur/LtYCHaqzQ5wKozVzSHIsOfTMM8kO/CHl6qnfrBdRBHv336tbPaHpjxi9rw2xr6sP0A/ksMqE5ebGtp3rpYsp74nF4qPnOuvAQXhQEEwroqMnQXkX6msB4RKTpMvhuVcIJoqVXHa8565gE73fI6ihYjBEAi2yIQ0KAxI1Bld7+DGx21ycoBKfrH2O0KPm9KrsSgjJ1uIyiDWA2tD16BoPLC8XQufVztmxZA8+iKhCtMYKvODQFdz1StPv6vZr97cBCQWRbWXjWlQV6VkLaBWiiHiYvDSxX74FKx2mHnVc5WFgb9AdVopV492YokCAjFVH8JOpGGbcVfB2jnJ3G4=
-  - secure: k/CbmEY/gj+LO32k4b1CEqnOjG106C0XXlqpjKeycPBBlWxtwTm0i6FSn7dzH3Sfnx8J6Vb1Y72BagMqR3tYDX5DmSYbLLg6ksJR/LVnv187YEP1dLSnMjObK0m44HJWnkA5CC8ngcgmzCaD5RUk81S1G5NC5v1KTH728qdQa+lhDmrgW51PUgrJRZIdoIGBMPzN8ttkKM/a9Ql9/we36xNqSyva8978Iq1jnYpSG3QRLEygto3znBfRfGSZvkljMPLl0L09BBzOWlcxmPYSljXomDrZz/nc7TICTyQ+NT7cmnKe52KYPKEPXXTpy9gbW0FlVSp16oi0aVzKwSoKSdDmGZ9goztpRCoKaJ+4r6geqqwzup3/th1U2k0kb+GPrqFV5IV2zM9ZDdjMU3ASPEMlu20wscrs7NRSm/n+3eXU0d10AM63johL85t7r1KTpY1fBLbEhbsKK1lYbZnH7SybLTH8aCzbDI4bOp9uhAvzmbO7Q5G3slSRpvuSzE5SDgRiedQWNB8YW72huSNLlkuM/w7I7bG+dn3sppr9vFRgIYbGtHGNRuv2iYQvvCRD6wVn9JiS3Yfx3gmKrozdsAhHC8FPbHXZGVs2aNZROnareKmi85ZMXnHejJIHWCs6bwxWkLFXYKpO8O+eX3eEcdwdfTWWzXCsLozsl5NPMOc=
