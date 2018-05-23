@@ -10,13 +10,11 @@ script:
 after_success:
 - set -e
 - openssl aes-256-cbc -K $encrypted_0373efeb2806_key -iv $encrypted_0373efeb2806_iv -in packaging-key.pem.enc -out packaging-key.pem -d
-- wget https://github.com/mcuadros/go-crxmake/releases/download/v0.2.0/crxmake_v0.2.0_linux_amd64.tar.gz
-- tar -xvzf crxmake_v0.2.0_linux_amd64.tar.gz
-- crxmake_v0.2.0_linux_amd64/crxmake --key-file=packaging-key.pem dist better-sms-${TRAVIS_COMMIT}.crx
+- yarn run package:nightly
 deploy:
   provider: releases
   api_key:
-    secure: laVZ12KIblCG+m2P+m7gbJh/1Sbt+4oixymyNetjJ35wVz7hh64hqGJyLkJKbsL13kHKtYrSgUcPhlJ3ehH6Hs9JQPPCX9uaIQfKgngMW6x/DqUc4gXgVeRbNXCinyfX4xCVzawFDRA30yGEUs816tUZTH9qa+3ze9Z0IvET/dgLOAMjwrfqtuaJ8cuX5fiV2ioTWgHv0ff0ZJP3BISgc/XXZFF6dLem6Q7DOO+EqBuVRFBBLZ67uccsm8qMRUAljTI3oP8E9vVye4Bwn5K33BrmiuOJeoR6yauKlgXo4wx6kRf2QPfTtzZKx+jr+TJwinRWy6I7ojCvdA9JWIu4/HEQWB4TK7BMHL4BLWET3oeLngpRhN8I6kozxVQMrbjrmXsuEirxy0yetP4X/MbrlHwDOYZ3h8OUM/rMeC1GfZWGLBWccnHLTfV77b94agiuNa1CujOofq3Leomou1wZKm5oZM2jwOTAql2yhbFHO4NMxUa2BaaijVn3eSnbxRTal1GttnknY8obeWiVJ0ozYtVnp2SVyHXUHOWtVYoY/YfmanJ6uwrLG8t+rMB2gpeE0reRBkgCt4pVdYuPd20HxHELTSMR9Dsoa4sGMTSw/tZOVO2xLXPhrckeZVpKNmJ6BPQRfOKayVtCNZfgwveSm4M8a1ui9Q/YOhfp4PU4U4U=
+    secure: "MsAPDY4T0Rz7PxABHiQRPPt8pU0NFEXa2rjuDjgSkbmaX3k2mUi57Hh0AT3rUxyf3dB7Wc4N0FuKDY/JjStvzQyefcsbSh8XN8OsZTwfBUSsXvve4gWCcDbbaVZy68fXLljzXRvoFAnCCyFBXyZ6U88bj88146l5yy62a6vphDOjYY1bQ47GuppssjjpimxgKjasFdzWUGUFyTD72PjrCQ6nPC9Mq3N7ihuSdhgrO8XFP+6NTpm0UrA15d50/rPpRJd9KEelXfylwlXGjFbgOnF6Q89uNbq5bsZgWQ3Svf0vJeZjnkGBjSipH2zlHNg/cLQKea5cllWh88KH2eH81jog45/JZqr7fscrhEB8V+/dT83R8GDYu28ntupSIzHaPY3c1kRB6RmJkhtd+u/nkK/2MRKsUPnMmF1B1X+ImurQJ/dGIvcqAEFC6RlJhcdaN0VwFFwl5hFsJn0q3nAF2ulNdqxL/RQTAGbD3jpnaPQNBGpPJTMbMtrbHyVlXiAqh0KubYJ8i58dRR/LzlzmPAAtahXsTlNhvF3Ca6UDx2Rul4SSc250ilazxlawVkamS4PrWV+9KVTMipr6wd+bKsMKC7Aw5qZ7tpxoKiVc1m4KGQewSzcGsBwlZlzaaRVIh201p++oHTXvx9F6Wj0Hpvf8KePcPVBy6y04DT7ygMo="
   file: better-sms-${TRAVIS_COMMIT}.crx
   skip_cleanup: true
   prerelease: true

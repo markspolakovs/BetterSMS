@@ -2,12 +2,14 @@
   "private": true,
   "scripts": {
     "build": "webpack --mode=production",
-    "watch": "webpack --mode=development --watch"
+    "watch": "webpack --mode=development --watch",
+    "package:nightly": "crx pack dist -o better-sms-${TRAVIS_COMMIT}.crx -p packaging-key.pem"
   },
   "dependencies": {
     "@types/jquery": "^3.3.1",
     "@types/jqueryui": "^1.12.2",
     "@types/lodash": "^4.14.109",
+    "crx": "^3.2.1",
     "date-fns": "^2.0.0-alpha.8",
     "jquery": "^3.3.1",
     "jqueryui": "^1.11.1",
