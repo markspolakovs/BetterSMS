@@ -1,6 +1,6 @@
 import $ from "jquery";
 import "jqueryui";
-import * as _ from "lodash";
+import * as dateFns from "date-fns";
 import { BackgroundFeature } from "../util/Feature";
 import { sendMessageFromContent } from "../util/messaging";
 import * as scripts from "../util/scripts";
@@ -16,7 +16,7 @@ export interface Reminder {
   exerciseData: MinimumExercise;
 }
 
-type ReminderList = { [name: string]: Reminder };
+export type ReminderList = { [name: string]: Reminder };
 
 let observer: MutationObserver;
 let key: string | undefined;
@@ -38,7 +38,7 @@ function onDomMutation(
               $("#" + key).length === 0
             ) {
               key = scripts.insertTemporaryScript(scripts.reminderButton);
-              window.setTimeout(() => {key = undefined}, 100);
+              // window.setTimeout(() => {key = undefined}, 1000);
             }
           }
         }
@@ -93,7 +93,7 @@ const feature: BackgroundFeature = {
     if (window === window.parent) {
       $("#main_menu > div:nth-child(1)").append(
         `<div class="nav_entry" style="color: orangered"  onclick="$('#interface_frame').attr('src', '${browser.runtime.getURL(
-          "ui/reminders.html"
+          "ui/reminders/reminders.html"
         )}')">Reminders</div>`
       );
     } else {
@@ -235,6 +235,10 @@ const feature: BackgroundFeature = {
           exerciseData: data
         };
         sendMessageFromContent(feature, C.ACTION_CREATE_REMINDER, msg);
+        break;
+      case "popupClosed":
+        key = undefined;
+        break;
     }
   },
   async onBackgroundMessage(action, payload) {
@@ -251,6 +255,12 @@ const feature: BackgroundFeature = {
         };
         await browser.storage.sync.set({
           [C.STORAGE_REMINDERALARMS]: (reminders as any)
+        });
+        browser.notifications.create(null, {
+          type: "basic",
+          iconUrl: "res/logo.png",
+          title: "Reminder created!",
+          message: "You will be reminded in " + dateFns.formatDistance(new Date(payload.when), new Date())
         });
     }
   }

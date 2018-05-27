@@ -35,11 +35,13 @@
     ]
   },
   "web_accessible_resources": [
+    "browser-polyfill.min.js",
     "res/*",
     "res/**/*",
     "ui/*",
     "ui/**/*",
-    "ui/reminders.html",
+    "ui/reminders/reminders.html",
+    "ui/reminders/bundle.js",
     "ui/lib/flatpickr.min.js"
   ],
   "icons": {

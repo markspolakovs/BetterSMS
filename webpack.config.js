@@ -8,7 +8,8 @@ module.exports = () => ({
   devtool: "srcmap",
   entry: {
     content: "./src/content.ts",
-    background: "./src/background.ts"
+    background: "./src/background.ts",
+    "ui/reminders/bundle": "./src/ui/reminders/index.tsx"
   },
   output: {
     path: path.join(__dirname, "dist"),

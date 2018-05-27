@@ -47,45 +47,89 @@ if (!window.createDiv.__monkeypatch) {
 // language=JavaScript
 export const reminderButton = `
 function __apply() {
+  console.log("__apply called");
   var dialogEl = $("#assignment_container");
   var __buttons = dialogEl.dialog("option", "buttons");
   var __buttonLabel = "add reminder";
+  var popupRef;
   dialogEl.dialog("option", "buttons", {
-      [__buttonLabel]: () => {
-          var html = "<span id='__r_wrapper'><input id='__r_time'><button class='ui-button ui-button-text-only' id='__r_save'>save</button><button class='ui-button ui-button-text-only' id='__r_cancel'>cancel</button></span>";
-          __buttons = dialogEl.dialog("option", "buttons")
-          delete __buttons[__buttonLabel];
-          dialogEl.dialog("option", "buttons", __buttons);
-          $('.ui-dialog-buttonpane > div > button:eq(0)').after(html);
-          var picker = window.flatpickr(document.getElementById("__r_time"), { enableTime: true, time_24hr: true });
-          $("#__r_save").on("click", function() {
+    [__buttonLabel]: () => {
+      console.log("reminder button clicked");
+      var html = "<label>Reminder time <input class='__r_time'></label>";
+      popupRef = $(html).dialog({
+        buttons: {
+          save: () => {
             window.postMessage(
-          {
-            feature: "reminders",
-            action: "clickReminders",
-            payload: {
-              exerciseData: {
-                title: dialogEl
-                .find("table > tbody > tr:nth-child(2) > td:nth-child(2)")
-                .text(),
-              type: dialogEl.find("table > tbody > tr:nth-child(3) > td:nth-child(2)").text(),
-              date: dialogEl.find("table > tbody > tr:nth-child(4) > td:nth-child(2)").text(),
+              {
+                feature: "reminders",
+                action: "clickReminders",
+                payload: {
+                  exerciseData: {
+                    title: dialogEl
+                      .find("table > tbody > tr:nth-child(2) > td:nth-child(2)")
+                      .text(),
+                    type: dialogEl
+                      .find("table > tbody > tr:nth-child(3) > td:nth-child(2)")
+                      .text(),
+                    date: dialogEl
+                      .find("table > tbody > tr:nth-child(4) > td:nth-child(2)")
+                      .text()
+                  },
+                  when: picker.selectedDates[0].valueOf()
+                }
               },
-              when: picker.selectedDates[0].valueOf()
-            }
+              "*"
+            );
+            $(popupRef).dialog("close");
+            $(popupRef).dialog("destroy");
+            __apply();
           },
-          "*"
-        );
+          cancel: () => {
+            $(popupRef).dialog("close");
+            $(popupRef).dialog("destroy");
             __apply();
-          });
-          $("#__r_cancel").on("click", function() {
-            __apply();
-          });
-      },
-      ...__buttons
+          }
+        },
+        modal: true,
+        position: "top",
+        title: "Create reminder",
+        close: () => {
+          __apply();
+        }
+      });
+      __buttons = dialogEl.dialog("option", "buttons");
+      delete __buttons[__buttonLabel];
+      dialogEl.dialog("option", "buttons", __buttons);
+      console.log($(".__r_time"));
+      var picker = $(".__r_time").flatpickr({
+        enableTime: true,
+        time_24hr: true
+      });
+    },
+    ...__buttons,
+    close: function() {
+      dialogEl.dialog("close");
+      window.postMessage(
+        { feature: "reminders", action: "popupClosed", payload: {} },
+        "*"
+      );
+    }
+  });
+  dialogEl.dialog("option", "close", () => {
+    window.postMessage(
+      { feature: "reminders", action: "popupClosed", payload: {} },
+      "*"
+    );
   });
 }
+
 __apply();
 
-$("body").append($("<script>").attr("src", "${browser.runtime.getURL("ui/lib/flatpickr.min.js")}")).append($("<link>").attr("rel", "stylesheet").attr("href", "${browser.runtime.getURL("ui/lib/flatpickr.min.css")}"));
+$("body").append($("<script>").attr("src", "${browser.runtime.getURL("ui/lib/flatpickr.min.js")}"));
+$("head").append(
+  $("<link>")
+    .attr("rel", "stylesheet")
+    .attr("href", "${browser.runtime.getURL("ui/lib/flatpickr.min.css")}")
+);
+//# sourceURL=betterSMS-reminders.js
 `;
