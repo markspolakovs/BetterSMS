@@ -7,7 +7,7 @@ import { testIcon } from "../util/resources";
 import { insertTemporaryScript } from "../util/scripts";
 
 let observer: MutationObserver;
-let key: string;
+let key: string | undefined;
 
 function onDomMutation(
   mutations: MutationRecord[],
@@ -31,6 +31,7 @@ function onDomMutation(
                 notifications: () => {window.postMessage({feature:"notifications",action:"clickNotifications",payload:{}}, "*")},
                 ...__buttons
               });`);
+              window.setTimeout(() => {key = undefined}, 100);
             }
           }
         }
@@ -41,7 +42,11 @@ function onDomMutation(
 
 const feature: BackgroundFeature = {
   name: "notifications",
-  activePaths: ["https://sms.eursc.eu**", "https://sms.eursc.eu/**"],
+  activePaths: [
+    "https://sms.eursc.eu/content/common/dashboard.php",
+    "https://sms.eursc.eu/content/common/calendar_for_students.php",
+    "https://sms.eursc.eu/content/studentui/grades_details.php"
+  ],
   async apply() {
     observer = new MutationObserver(onDomMutation);
     observer.observe(document.body, {

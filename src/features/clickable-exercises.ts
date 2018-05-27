@@ -34,8 +34,10 @@ async function getExerciseDetail(
   type: string,
   description: string
 ) {
+  console.log("ate gED");
   if (!userId) {
     userId = await findUserId();
+    console.log("ate userId");
   }
   const baseDate = new Date();
   baseDate.setUTCHours(0, 0, 0, 0);
@@ -57,6 +59,7 @@ async function getExerciseDetail(
     }
   );
   let data = (await res.json()) as ScheduleEntry[];
+  console.log("ate data: " + data);
   // First, find just exercises
   data = data.filter(x => x.entry_type === "Exercise");
   // Then, find the one we're looking for
@@ -111,10 +114,12 @@ const feature: Feature = {
       } else {
         description = descParent.contents()[0].textContent!;
       }
+      console.log("ate description: " + description);
       $(this)
         .find("td:lt(3)")
         .css({ cursor: "pointer" })
         .click(async function() {
+          console.log("ate click");
           await getExerciseDetail(date, type, description);
         });
     });

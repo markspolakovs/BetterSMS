@@ -6,6 +6,7 @@
     "package:nightly": "crx pack dist -o better-sms-${TRAVIS_COMMIT}.crx -p packaging-key.pem"
   },
   "dependencies": {
+    "@types/chrome": "^0.0.66",
     "@types/jquery": "^3.3.1",
     "@types/jqueryui": "^1.12.2",
     "@types/lodash": "^4.14.109",

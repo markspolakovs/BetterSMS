@@ -219,11 +219,11 @@ function activateFeatures(url?: string) {
       .find("body")
       .first()
       .append(createDivMonkeyPatch);
-    console.log("ENGAGE THE MONKEY");
-    if (!hasEventListener) {
-      window.addEventListener("message", pageMessageEventHandler);
-      hasEventListener = true;
-    }
+  }
+  if (!hasEventListener) {
+    console.log("adding event listener");
+    window.addEventListener("message", pageMessageEventHandler);
+    hasEventListener = true;
   } else {
     window.removeEventListener("message", pageMessageEventHandler);
     hasEventListener = false;

@@ -6,17 +6,44 @@
   "content_scripts": [
     {
       "run_at": "document_start",
-      "matches": ["*://sms.eursc.eu/*"],
-      "js": ["browser-polyfill.min.js", "content.js"],
+      "matches": [
+        "*://sms.eursc.eu/*"
+      ],
+      "js": [
+        "browser-polyfill.min.js",
+        "content.js"
+      ],
       "all_frames": true
     }
   ],
   "background": {
-    "scripts": ["browser-polyfill.min.js", "background.js"],
+    "scripts": [
+      "browser-polyfill.min.js",
+      "background.js"
+    ],
     "persistent": false
   },
-  "permissions": ["*://sms.eursc.eu/*", "notifications", "alarms"],
+  "permissions": [
+    "*://sms.eursc.eu/*",
+    "notifications",
+    "alarms",
+    "storage"
+  ],
   "externally_connectable": {
-    "matches": ["*://sms.eursc.eu/*"]
+    "matches": [
+      "*://sms.eursc.eu/*"
+    ]
+  },
+  "web_accessible_resources": [
+    "res/*",
+    "res/**/*",
+    "ui/*",
+    "ui/**/*",
+    "ui/reminders.html",
+    "ui/lib/flatpickr.min.js"
+  ],
+  "icons": {
+    "32": "res/logo-32.png",
+    "128": "res/logo-128.png"
   }
 }

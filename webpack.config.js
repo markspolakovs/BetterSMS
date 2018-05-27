@@ -30,13 +30,13 @@ module.exports = () => ({
   },
   resolve: {
     plugins: [new TsconfigPathsPlugin()],
-	modules: [path.resolve("src"), "node_modules"],
-	extensions: ['.ts', ".tsx", ".js", ".jsx"]
+    modules: [path.resolve("src"), "node_modules"],
+    extensions: [".ts", ".tsx", ".js", ".jsx"]
   },
   plugins: [
     new CopyWebpackPlugin([
       {
-        from: "*",
+        from: "**/*",
         context: "src",
         ignore: ["*.ts", "*.tsx"]
       },
