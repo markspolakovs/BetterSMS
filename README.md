@@ -22,6 +22,7 @@ To download a development build, visit https://github.com/markspolakovs/BetterSM
 - [x] O365 login button on login page
 - [x] Show all announcements on dashboard, including expired
 - [x] Clickable assignments in "Graded Exercises"
+- [x] Background sync and schedule change notifications
+- [x] Reminders
 - [ ] Search for assignments
 - [ ] Search for files
-- [ ] Notifications
