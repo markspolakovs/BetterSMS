@@ -80,7 +80,7 @@ class SyncReport extends React.Component<{}, State> {
                     {report!.added.map(entry => (
                         <div key={`${entry.id}-${entry.start}`} style={styles.card}>
                             <b>{entry.title}</b>
-                            <div>{dateFns.format(entry.start, "EEEE")} {entry.param_2.replace("          -", "")}</div>
+                            <div>{dateFns.format(entry.start, "EEEE	")} {entry.param_2.replace("          -", "")}</div>
                             <div>{entry.teacher_name_list} - {entry.param_1}</div>
                         </div>
                     ))}
@@ -119,7 +119,7 @@ class SyncReport extends React.Component<{}, State> {
                     {report!.removed.map(entry => (
                         <div key={`${entry.id}-${entry.start}`} style={styles.card}>
                             <b>{entry.title}</b>
-                            <div>{dateFns.format(entry.start, "dddd")} {entry.param_2.replace("          -", "")}</div>
+                            <div>{dateFns.format(entry.start, "EEEE")} {entry.param_2.replace("          -", "")}</div>
                             <div>{entry.teacher_name_list} - {entry.param_1}</div>
                         </div>
                     ))}
