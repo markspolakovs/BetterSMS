@@ -9,7 +9,8 @@ module.exports = () => ({
   entry: {
     content: "./src/content.ts",
     background: "./src/background.ts",
-    "ui/reminders/bundle": "./src/ui/reminders/index.tsx"
+    "ui/reminders/bundle": "./src/ui/reminders/index.tsx",
+    "ui/backgroundSync/syncReport-bundle": "./src/ui/backgroundSync/syncReport.tsx",
   },
   output: {
     path: path.join(__dirname, "dist"),

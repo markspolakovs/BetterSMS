@@ -1,3 +1,5 @@
+import * as R from "runtypes";
+
 export interface ScheduleEntry {
     entry_type: string;
     id: string;
@@ -15,3 +17,22 @@ export interface ScheduleEntry {
     color: string;
     textColor: string;
 }
+
+export const HtmlString = R.Record({
+    __html: R.String
+});
+
+export type HtmlStringType = R.Static<typeof HtmlString>;
+
+export const ExerciseDetail = R.Record({
+    course: R.String,
+    title: R.String,
+    type: R.String,
+    due: R.String,
+    generalComment: HtmlString,
+    grade: R.String,
+    status: R.String,
+    supportingComment: HtmlString
+});
+
+export type ExerciseDetailType = R.Static<typeof ExerciseDetail>;

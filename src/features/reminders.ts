@@ -203,7 +203,7 @@ const feature: BackgroundFeature = {
               return;
             }
             delete reminders[notifName];
-            reminder.when += 5 * 60 * 1000;
+            reminder.when = new Date().valueOf() + (5 * 60 * 1000);
             const newId = C.STORAGE_REMINDER_PREFIX + scripts.makeId(4);
             reminders = {
               ...reminders,
