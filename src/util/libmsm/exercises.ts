@@ -1,18 +1,21 @@
 import $ from "jquery";
 import * as dateFns from "date-fns";
 import { ScheduleEntry } from "../msm-types";
-import { isNonNull, invariant } from "../invariant";
+import { assertNotNull, invariant } from "../invariant";
 
 let userId: string;
 
 export async function findUserId() {
-  const res = await fetch("https://sms.eursc.eu/content/common/calendar_for_students.php", {
-    credentials: "include"
-  });
+  const res = await fetch(
+    "https://sms.eursc.eu/content/common/calendar_for_students.php",
+    {
+      credentials: "include"
+    }
+  );
   const userIdMatch = (await res.text()).match(
     /<input.*id="user_id".*value="([0-9]+)"/i
   );
-  if (!isNonNull(userIdMatch, "userIdMatch is null")) {
+  if (!assertNotNull(userIdMatch, "userIdMatch is null")) {
     throw "SHOULD NEVER HAPPEN";
   }
   const userId = userIdMatch[1];
