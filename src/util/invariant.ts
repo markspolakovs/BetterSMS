@@ -37,6 +37,13 @@ export function invariant(
       error.name = "Invariant Violation";
     }
 
+    if (window && window.alert) {
+      window.alert(
+        "A required invariant in BetterSMS's code was not met, and at this point it is dangerous to proceed. Please report this error to the BetterSMS developers. \r\n\r\n" +
+          error.message
+      );
+    }
+
     (error as any).framesToPop = 1; // Skip invariant's own stack frame.
     throw error;
   }

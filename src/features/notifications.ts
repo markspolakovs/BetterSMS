@@ -1,13 +1,25 @@
 import $ from "jquery";
 import "jqueryui";
 /// <reference types="jqueryui" />
+import * as C from "../util/constants";
+import * as R from "runtypes";
 import { BackgroundFeature } from "../util/Feature";
+import { ExerciseDetail, ExerciseDetailType } from "../util/msm-types";
 import { sendMessageFromContent } from "../util/messaging";
 import { testIcon } from "../util/resources";
 import { insertTemporaryScript } from "../util/scripts";
 
 let observer: MutationObserver;
 let key: string | undefined;
+
+const WatchlistExercise = R.Record({
+  id: R.String,
+  lastData: ExerciseDetail
+});
+type WatchlistExerciseType = R.Static<typeof WatchlistExercise>;
+
+const StorageWatchlist = R.Array(WatchlistExercise);
+type StorageWatchlistType = R.Static<typeof StorageWatchlist>;
 
 function onDomMutation(
   mutations: MutationRecord[],
@@ -58,10 +70,24 @@ const feature: BackgroundFeature = {
   unload() {
     observer.disconnect();
   },
-  applyBackground() {},
-  onContentMessage(action, message) {},
-  onPageMessage(action, message) {},
-  onBackgroundMessage(action, message) {
+  applyBackground() {
+    const onAlarm = async (alarm: browser.alarms.Alarm) => {
+
+    };
+
+    browser.storage.onChanged.addListener((changes, area) => {
+      if (area === "sync") {
+        if (C.STORAGE_NOTIFICATIONS_WATCHLIST in changes) {
+          const newValueBerk = changes[C.STORAGE_NOTIFICATIONS_WATCHLIST].newValue;
+          if (!StorageWatchlist.guard(newValueBerk)) {
+            console.error("Invalid storage data!");
+            return;
+          }
+        }
+      }
+    });
+  },
+  onBackgroundMessage(action: any, message: any) {
     switch (action) {
       case "test":
         browser.notifications.create(null, {

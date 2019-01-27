@@ -6,79 +6,7 @@ import { ScheduleEntry } from "../util/msm-types";
 import { invariant, assertNotNull, assertString } from "../util/invariant";
 import { Feature } from "../util/Feature";
 import { insertTemporaryScript } from "../util/scripts";
-
-let userId: string;
-
-async function findUserId() {
-  const res = await fetch("/content/common/calendar_for_students.php", {
-    credentials: "include"
-  });
-  const userIdMatch = (await res.text()).match(
-    /<input.*id="user_id".*value="([0-9]+)"/i
-  );
-  if (!assertNotNull(userIdMatch, "iFrame's contentDocument is null")) {
-    throw "SHOULD NEVER HAPPEN";
-  }
-  const userId = userIdMatch[1];
-  invariant(
-    userId.length > 1,
-    "userID is less than two characters long - this probably means it wasn't loaded properly - some other APIs bork if you don't give them user_id, so we're gonna stop here"
-  );
-  return userId;
-}
-
-(window as any).dateFns2 = dateFns;
-
-async function getExerciseDetail(
-  date: string,
-  type: string,
-  description: string
-) {
-  if (!userId) {
-    userId = await findUserId();
-  }
-  assertString(userId, "userId was not a string, even after findUserId()");
-  const baseDate = new Date();
-  baseDate.setUTCHours(0, 0, 0, 0);
-  const dateObj = dateFns.parse(date, "dd/MM/yyyy", baseDate);
-  const res = await fetch(
-    "https://sms.eursc.eu/data/common_handler.php?action=Contact::AJAX_U_GetSchedule",
-    {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
-      },
-      body: $.param({
-        user_id: userId,
-        inc_appointment: true,
-        start: dateObj.valueOf() / 1000,
-        end: dateFns.setHours(dateObj, 23).valueOf() / 1000
-      })
-    }
-  );
-  let data = (await res.json()) as ScheduleEntry[];
-  console.log("ate data: " + data);
-  // First, find just exercises
-  data = data.filter(x => x.entry_type === "Exercise");
-  // Then, find the one we're looking for
-  const exer = data.find(
-    x =>
-      x.title === description && x.param_1.replace(/(.+) \/ .*/, "$1") === type
-  );
-  if (!exer) {
-    alert("Could not unambiguously match exercise");
-    return;
-  } else {
-    console.log(exer);
-    // DIRTY HAX - you can't access page variables from an extension content script
-    // so we inject a script tag, which can
-    // I hate the universe, but it works
-    insertTemporaryScript(
-      `window.loadStudentExercise("${exer.id}", "${userId}")`
-    );
-  }
-}
+import * as exercises from "../util/libmsm/exercises";
 
 const feature: Feature = {
   name: "clickable-exercises",
@@ -119,7 +47,20 @@ const feature: Feature = {
         .css({ cursor: "pointer" })
         .click(async function() {
           console.log("ate click");
-          await getExerciseDetail(date, type, description);
+          const userId = await exercises.findUserId();
+          const exer = await exercises.getExerciseDetail(
+            date,
+            type,
+            description
+          );
+          if (exer) {
+            // DIRTY HAX - you can't access page variables from an extension content script
+            // so we inject a script tag, which can
+            // I hate the universe, but it works
+            insertTemporaryScript(
+              `window.loadStudentExercise("${exer.id}", "${userId}")`
+            );
+          }
         });
     });
   }
