@@ -57,12 +57,12 @@ type Classy<T> = Function & { prototype: T };
 type TypeGuard<T> = (x: any) => x is T;
 
 const TYPE_GUARDS_PRIMITIVE = [
-  isBoolean,
-  isNumber,
-  isString,
-  isSymbol,
-  isNull,
-  isUndefined
+  assertBoolean,
+  assertNumber,
+  assertString,
+  assertSymbol,
+  assertNull,
+  assertUndefined
 ];
 
 /**
@@ -72,7 +72,7 @@ const TYPE_GUARDS_PRIMITIVE = [
  *
  * @param msg The message to print if the check fails
  */
-export function isBoolean(x: any, msg?: string): x is boolean {
+export function assertBoolean(x: any, msg?: string): x is boolean {
   invariant(typeof x === "boolean", msg || "Failed boolean check");
   return true;
 }
@@ -84,7 +84,7 @@ export function isBoolean(x: any, msg?: string): x is boolean {
  *
  * @param msg The message to print if the check fails
  */
-export function isNumber(x: any, msg?: string): x is number {
+export function assertNumber(x: any, msg?: string): x is number {
   invariant(typeof x === "number", msg || "Failed number check");
   return true;
 }
@@ -96,7 +96,7 @@ export function isNumber(x: any, msg?: string): x is number {
  *
  * @param msg The message to print if the check fails
  */
-export function isString(x: any, msg?: string): x is string {
+export function assertString(x: any, msg?: string): x is string {
   invariant(typeof x === "string", msg || "Failed string check");
   return true;
 }
@@ -108,7 +108,7 @@ export function isString(x: any, msg?: string): x is string {
  *
  * @param msg The message to print if the check fails
  */
-export function isSymbol(x: any, msg?: string): x is symbol {
+export function assertSymbol(x: any, msg?: string): x is symbol {
   invariant(typeof x === "symbol", msg || "Failed symbol check");
   return true;
 }
@@ -120,7 +120,7 @@ export function isSymbol(x: any, msg?: string): x is symbol {
  *
  * @param msg The message to print if the check fails
  */
-export function isNull(x: any, msg?: string): x is null {
+export function assertNull(x: any, msg?: string): x is null {
   invariant(x === null, msg || "Failed null check");
   return true;
 }
@@ -132,7 +132,10 @@ export function isNull(x: any, msg?: string): x is null {
  *
  * @param msg The message to print if the check fails
  */
-export function isNonNull<T>(x: T | null, msg?: string): x is NonNullable<T> {
+export function assertNotNull<T>(
+  x: T | null,
+  msg?: string
+): x is NonNullable<T> {
   invariant(x !== null, msg || "Failed non-null check");
   return true;
 }
@@ -144,7 +147,7 @@ export function isNonNull<T>(x: T | null, msg?: string): x is NonNullable<T> {
  *
  * @param message The message to print if the check fails
  */
-export function isUndefined(x: any, message?: string): x is undefined {
+export function assertUndefined(x: any, message?: string): x is undefined {
   invariant(x === undefined, message || "Failed undefined check");
   return true;
 }
@@ -156,7 +159,7 @@ export function isUndefined(x: any, message?: string): x is undefined {
  *
  * @return `true` iff `x` is a `boolean`, `number`, `string`, `symbol`, `null`, or `undefined`.
  */
-export function isPrimitive(x: any, msg?: string): x is primitive {
+export function assertPrimitive(x: any, msg?: string): x is primitive {
   invariant(
     TYPE_GUARDS_PRIMITIVE.some(f => f(x)),
     msg || "Failed primitive check"
@@ -173,8 +176,8 @@ export function isPrimitive(x: any, msg?: string): x is primitive {
  *
  * @return `true` iff `x` is not a primitive.
  */
-export function isNonPrimitive(x: any, message?: string): x is object {
-  invariant(!isPrimitive(x), message || "Failed non-primitive check");
+export function assertNonPrimitive(x: any, message?: string): x is object {
+  invariant(!assertPrimitive(x), message || "Failed non-primitive check");
   return true;
 }
 
@@ -189,11 +192,15 @@ export function isNonPrimitive(x: any, message?: string): x is object {
  *
  * @return `true` if `value` is `type`
  */
-export function is<T>(type: Classy<T>, x: any, message?: string): x is T {
+export function assertIs<T>(
+  type: Classy<T>,
+  x: any,
+  message?: string
+): x is T | never {
   // Useful mainly in the absence of strictNullChecks:
-  if (isPrimitive(type)) {
+  if (assertPrimitive(type)) {
     throw new TypeError(
-      `${type} cannot be used as a type in the is() function.`
+      `${String(type)} cannot be used as a type in the is() function.`
     );
   }
   invariant(

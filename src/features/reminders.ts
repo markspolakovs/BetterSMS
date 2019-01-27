@@ -92,9 +92,9 @@ const feature: BackgroundFeature = {
   async apply() {
     if (window === window.parent) {
       $("#main_menu > div:nth-child(1)").append(
-        `<div class="nav_entry" style="color: orangered"  onclick="$('#interface_frame').attr('src', '${browser.runtime.getURL(
+        `<div class="nav_entry" style="color: orangered" onclick="document.getElementById('interface_frame').src = '${browser.runtime.getURL(
           "ui/reminders/reminders.html"
-        )}')">Reminders</div>`
+        )}'">Reminders</div>`
       );
     } else {
       observer = new MutationObserver(onDomMutation);
@@ -133,9 +133,11 @@ const feature: BackgroundFeature = {
           // and the WebExt polyfill only has properties Firefox supports
           // hence the `as any`
           // </rant>
-          buttons: [{
-            title: "Snooze"
-          }]
+          buttons: [
+            {
+              title: "Snooze"
+            }
+          ]
         } as any);
       }
     });
@@ -150,8 +152,10 @@ const feature: BackgroundFeature = {
     });
 
     browser.notifications.onClicked.addListener(async notifName => {
-      if (notifName.substr(0, C.STORAGE_REMINDER_PREFIX.length) ===
-        C.STORAGE_REMINDER_PREFIX) {
+      if (
+        notifName.substr(0, C.STORAGE_REMINDER_PREFIX.length) ===
+        C.STORAGE_REMINDER_PREFIX
+      ) {
         const reminderStore = await browser.storage.sync.get({
           [C.STORAGE_REMINDERALARMS]: {}
         });
@@ -163,14 +167,16 @@ const feature: BackgroundFeature = {
         }
         delete reminders[notifName];
         await browser.storage.sync.set({
-          [C.STORAGE_REMINDERALARMS]: (reminders as any)
+          [C.STORAGE_REMINDERALARMS]: reminders as any
         });
       }
     });
 
     browser.notifications.onClosed.addListener(async notifName => {
-      if (notifName.substr(0, C.STORAGE_REMINDER_PREFIX.length) ===
-        C.STORAGE_REMINDER_PREFIX) {
+      if (
+        notifName.substr(0, C.STORAGE_REMINDER_PREFIX.length) ===
+        C.STORAGE_REMINDER_PREFIX
+      ) {
         const reminderStore = await browser.storage.sync.get({
           [C.STORAGE_REMINDERALARMS]: {}
         });
@@ -182,45 +188,50 @@ const feature: BackgroundFeature = {
         }
         delete reminders[notifName];
         await browser.storage.sync.set({
-          [C.STORAGE_REMINDERALARMS]: (reminders as any)
+          [C.STORAGE_REMINDERALARMS]: reminders as any
         });
       }
     });
 
     if (chrome.notifications.onButtonClicked) {
-      chrome.notifications.onButtonClicked.addListener(async (notifName, button) => {
-        if (notifName.substr(0, C.STORAGE_REMINDER_PREFIX.length) ===
-          C.STORAGE_REMINDER_PREFIX) {
-          if (button === 0) {
-            // snooze button
-            const reminderStore = await browser.storage.sync.get({
-              [C.STORAGE_REMINDERALARMS]: {}
-            });
-            let reminders: ReminderList = reminderStore[C.STORAGE_REMINDERALARMS];
-            const reminder = reminders[notifName] as Reminder | undefined;
-            if (!reminder) {
-              console.error(`FUCKUP! reminder ${notifName} does not exist`);
-              return;
+      chrome.notifications.onButtonClicked.addListener(
+        async (notifName, button) => {
+          if (
+            notifName.substr(0, C.STORAGE_REMINDER_PREFIX.length) ===
+            C.STORAGE_REMINDER_PREFIX
+          ) {
+            if (button === 0) {
+              // snooze button
+              const reminderStore = await browser.storage.sync.get({
+                [C.STORAGE_REMINDERALARMS]: {}
+              });
+              let reminders: ReminderList =
+                reminderStore[C.STORAGE_REMINDERALARMS];
+              const reminder = reminders[notifName] as Reminder | undefined;
+              if (!reminder) {
+                console.error(`FUCKUP! reminder ${notifName} does not exist`);
+                return;
+              }
+              delete reminders[notifName];
+              reminder.when += 5 * 60 * 1000;
+              const newId = C.STORAGE_REMINDER_PREFIX + scripts.makeId(4);
+              reminders = {
+                ...reminders,
+                [newId]: reminder
+              };
+              await browser.storage.sync.set({
+                [C.STORAGE_REMINDERALARMS]: reminders as any
+              });
+              await browser.notifications.create(null, {
+                type: "basic",
+                iconUrl: "res/logo.png",
+                title: "Snoozing for five minutes",
+                message: "But don't you dare procrastinate!"
+              });
             }
-            delete reminders[notifName];
-            reminder.when += 5 * 60 * 1000;
-            const newId = C.STORAGE_REMINDER_PREFIX + scripts.makeId(4);
-            reminders = {
-              ...reminders,
-              [newId]: reminder
-            };
-            await browser.storage.sync.set({
-              [C.STORAGE_REMINDERALARMS]: (reminders as any)
-            });
-            await browser.notifications.create(null, {
-              type: "basic",
-              iconUrl: "res/logo.png",
-              title: "Snoozing for five minutes",
-              message: "But don't you dare procrastinate!"
-            });
           }
         }
-      })
+      );
     }
   },
   onContentMessage(action, payload) {},
@@ -254,13 +265,15 @@ const feature: BackgroundFeature = {
           [id]: payload
         };
         await browser.storage.sync.set({
-          [C.STORAGE_REMINDERALARMS]: (reminders as any)
+          [C.STORAGE_REMINDERALARMS]: reminders as any
         });
         browser.notifications.create(null, {
           type: "basic",
           iconUrl: "res/logo.png",
           title: "Reminder created!",
-          message: "You will be reminded in " + dateFns.formatDistance(new Date(payload.when), new Date())
+          message:
+            "You will be reminded in " +
+            dateFns.formatDistance(new Date(payload.when), new Date())
         });
     }
   }

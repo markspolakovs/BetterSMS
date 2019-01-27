@@ -1,6 +1,6 @@
 import $ from "jquery";
 import { Feature } from "../util/Feature";
-import { invariant, isNonNull } from "../util/invariant";
+import { invariant, assertNotNull } from "../util/invariant";
 
 ($.fn as any).bindFirst = function(name: string, fn: Function) {
   // bind as you normally would
@@ -10,11 +10,11 @@ import { invariant, isNonNull } from "../util/invariant";
   // Thanks to a comment by @Martin, adding support for
   // namespaced events too.
   this.each(function(this: HTMLElement) {
-      var handlers = ($ as any)._data(this, 'events')[name.split('.')[0]];
-      // take out the handler we just inserted from the end
-      var handler = handlers.pop();
-      // move it at the beginning
-      handlers.splice(0, 0, handler);
+    var handlers = ($ as any)._data(this, "events")[name.split(".")[0]];
+    // take out the handler we just inserted from the end
+    var handler = handlers.pop();
+    // move it at the beginning
+    handlers.splice(0, 0, handler);
   });
 };
 
@@ -26,10 +26,9 @@ const feature: Feature = {
       // we're not in the iframe, let the content script in the frame handle it
       return;
     }
-    $("#dashlet_1")
-      .replaceWith(
-        `<iframe id="allAnnouncements-iframe" style="width: 100%; height: 400px" src="https://sms.eursc.eu/content/announcement/announcement_inbox.php"></iframe>`
-      );
+    $("#dashlet_1").replaceWith(
+      `<iframe id="allAnnouncements-iframe" style="width: 100%; height: 400px" src="https://sms.eursc.eu/content/announcement/announcement_inbox.php"></iframe>`
+    );
     const oldWindow = window;
     window.setTimeout(() => {
       const replacement = document.getElementById(
@@ -50,23 +49,30 @@ const feature: Feature = {
             event.preventDefault();
             event.stopImmediatePropagation();
             // Find the announcement ID from the class of da ting we clicked
-            let match = $(this)[0].className.match(
-              /announcement_([0-9]+)/
-            );
+            let match = $(this)[0].className.match(/announcement_([0-9]+)/);
             // The invariant will throw anyway if it's null, just that
             // TypeScript needs the if statement to know that there is *no possible way*
             // to continue
-            if (!isNonNull(match, "Failed to find announcement ID")) {
+            if (!assertNotNull(match, "Failed to find announcement ID")) {
               return;
             }
             const id = match[1];
             // There is no way to override SMS's event handler
             // so let it open its dumb modal, and remove it immediately after
-            window.setTimeout(() => $(replacement).contents().find("#announcement_modal").remove(), 1);
+            window.setTimeout(
+              () =>
+                $(replacement)
+                  .contents()
+                  .find("#announcement_modal")
+                  .remove(),
+              1
+            );
             // DIRTY HAX - you can't access page variables from an extension content script
             // so we inject a script tag, which can
             // I hate the universe, but it works
-            $(document.body).append(`<script>window.openAnnouncementModal("${id}")</script>`);
+            $(document.body).append(
+              `<script>window.openAnnouncementModal("${id}")</script>`
+            );
             return false;
           });
       };

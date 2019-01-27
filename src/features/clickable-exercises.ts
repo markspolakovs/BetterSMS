@@ -3,7 +3,7 @@ import dateFns from "date-fns";
 import fp from "date-fns/fp";
 import lodash from "lodash";
 import { ScheduleEntry } from "../util/msm-types";
-import { invariant, isNonNull } from "../util/invariant";
+import { invariant, assertNotNull, assertString } from "../util/invariant";
 import { Feature } from "../util/Feature";
 import { insertTemporaryScript } from "../util/scripts";
 
@@ -16,7 +16,7 @@ async function findUserId() {
   const userIdMatch = (await res.text()).match(
     /<input.*id="user_id".*value="([0-9]+)"/i
   );
-  if (!isNonNull(userIdMatch, "iFrame's contentDocument is null")) {
+  if (!assertNotNull(userIdMatch, "iFrame's contentDocument is null")) {
     throw "SHOULD NEVER HAPPEN";
   }
   const userId = userIdMatch[1];
@@ -34,11 +34,10 @@ async function getExerciseDetail(
   type: string,
   description: string
 ) {
-  console.log("ate gED");
   if (!userId) {
     userId = await findUserId();
-    console.log("ate userId");
   }
+  assertString(userId, "userId was not a string, even after findUserId()");
   const baseDate = new Date();
   baseDate.setUTCHours(0, 0, 0, 0);
   const dateObj = dateFns.parse(date, "dd/MM/yyyy", baseDate);

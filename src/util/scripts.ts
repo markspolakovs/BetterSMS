@@ -14,10 +14,10 @@ export function makeId(length: number) {
 export function insertTemporaryScript(src: string, timeout = 1000) {
   const key = `__betterSMS__temporaryScript${makeId(4)}`;
   $("body").append(`<script id="${key}">${src}</script>`);
-  window.setTimeout(timeout, () => {
+  window.setTimeout(() => {
     console.log("clearing temporary script");
     $(`#${key}`).remove();
-  });
+  }, timeout);
   return key;
 }
 
@@ -125,7 +125,9 @@ function __apply() {
 
 __apply();
 
-$("body").append($("<script>").attr("src", "${browser.runtime.getURL("ui/lib/flatpickr.min.js")}"));
+$("body").append($("<script>").attr("src", "${browser.runtime.getURL(
+  "ui/lib/flatpickr.min.js"
+)}"));
 $("head").append(
   $("<link>")
     .attr("rel", "stylesheet")
