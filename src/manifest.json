@@ -13,6 +13,9 @@
         "browser-polyfill.min.js",
         "content.js"
       ],
+      "css": [
+        "res/styles/betterSMS.css"
+      ],
       "all_frames": true
     }
   ],
@@ -27,7 +30,8 @@
     "*://sms.eursc.eu/*",
     "notifications",
     "alarms",
-    "storage"
+    "storage",
+    "*://myschoolmanagement.s3.amazonaws.com/*"
   ],
   "externally_connectable": {
     "matches": [
