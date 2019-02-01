@@ -13,9 +13,9 @@ Since some people might be getting concerned:
 
 ### Installing
 
-For now the extension is not available on Chrome Web Store / AMO, so the only way is to install a development build. For now development builds are only available for Chrome, Firefox builds are coming soon.
+For now the extension is not available on Chrome Web Store / AMO, so the only way is to install a development build.
 
-To download a development build, visit https://github.com/markspolakovs/BetterSMS/releases, find the latest release, download the `.crx` file, go to `chrome://extensions`, and drag-and-drop the `.crx` file onto the Chrome page.
+To use a development build, clone the repository, run `yarn && yarn build` (or `npm install && npm run build`), go to chrome://extensions, enable Developer Mode, click "Load Unpacked Extension", and browse to `<where you cloned this repo>/dist`.
 
 ### Features / To-Do List
 
@@ -25,4 +25,4 @@ To download a development build, visit https://github.com/markspolakovs/BetterSM
 - [x] Background sync and schedule change notifications
 - [x] Reminders
 - [ ] Search for assignments
-- [ ] Search for files
+- [x] Search for files
